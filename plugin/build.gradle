@@ -1,9 +1,14 @@
+plugins {
+    id "com.jfrog.artifactory" version "4.9.6"
+}
 repositories {
     jcenter()
 }
 
+
 apply plugin: 'groovy'
 
+project.group = 'com.netcosports.android.easylauncher'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -11,35 +16,55 @@ targetCompatibility = JavaVersion.VERSION_1_8
 dependencies {
     compile gradleApi()
     compile localGroovy()
-    compile 'com.android.tools.build:gradle:2.3.3'
+    compile 'com.android.tools.build:gradle:3.5.1'
 
     testCompile('org.spockframework:spock-core:1.0-groovy-2.4') {
         exclude group:'org.codehaus.groovy'
     }
 }
 
-if (rootProject.hasProperty('versionName') && rootProject.hasProperty('bintrayUser')) {
-    jar {
-        manifest {
-            attributes(
-                    "Implementation-Version": project.file("../VERSION").text.trim(),
-            )
+apply plugin: 'com.jfrog.artifactory'
+apply plugin: 'maven-publish'
+
+task androidSourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.groovy.srcDirs
+}
+
+publishing {
+    publications {
+        jar(MavenPublication) {
+            groupId 'com.netcosports.gradle'
+            version = '0.0.2'
+            artifactId 'easylauncher'
+
+            // Tell maven to prepare the generated "*.jar" file for publishing
+            artifact("$buildDir/libs/${project.getName()}.jar")
+            artifact androidSourcesJar
+
         }
     }
+}
 
-    apply plugin: 'com.novoda.bintray-release'
-
+artifactory {
+    contextUrl = 'https://artifactory-blr.netcodev.com/artifactory'
     publish {
-        artifactId = 'easylauncher'
-        repoName = 'android'
-        desc = 'Gradle plugin to modify Android launcher icons'
+        repository {
+            // The Artifactory repository key to publish to
+            repoKey = 'libs-release-local'
 
-        def metadata = rootProject.ext.metadata
-        userOrg = metadata.userOrg
-        groupId = metadata.groupId
-        publishVersion = metadata.version
-        website = metadata.website
-        repository = metadata.repository
-        licences = metadata.licences
+            username = repoUsername
+            password = repoPassword
+        }
+        defaults {
+            // Tell the Artifactory Plugin which artifacts should be published to Artifactory.
+            publications('jar')
+            publishArtifacts = true
+
+            // Properties to be attached to the published artifacts.
+//            properties = ['qa.level': 'basic', 'dev.team': 'core']
+            // Publish generated POM files to Artifactory (true by default)
+            publishPom = true
+        }
     }
 }
