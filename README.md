@@ -13,11 +13,15 @@ Modify the launcher icon of each of your app-variants using simple gradle rules.
 ```groovy
 // in build.gradle
 buildscript {
-    repositories {
-        jcenter()
+    maven {
+            url "https://artifactory-blr.netcodev.com/artifactory/libs-release"
+            credentials {
+                username project.repoUsername
+                password project.repoPassword
+            }
     }
     dependencies {
-        classpath 'com.akaita.android:easylauncher:1.3.1'
+        classpath 'com.netcosports.gradle:easylauncher:0.0.1'
     }
 }
 ```
@@ -37,7 +41,7 @@ easylauncher {
 }
 ```
 
-Warning: please not that `easylauncher` doesn't yet support vector drawables. Please feel free to contribute a PR solving the issue https://github.com/akaita/easylauncher-gradle-plugin/issues/9
+Warning: please not that `easylauncher` doesn't yet support vector drawables.
 
 
 ### Advanced usage
