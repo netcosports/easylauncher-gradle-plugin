@@ -1,8 +1,8 @@
 package com.akaita.android.easylauncher.plugin
 
+import com.akaita.android.easylauncher.filter.EasyLauncherFilter
 import com.android.build.gradle.AppExtension
 import com.android.build.gradle.api.ApplicationVariant
-import com.akaita.android.easylauncher.filter.EasyLauncherFilter
 import com.google.common.collect.Lists
 import groovy.transform.CompileStatic
 import org.gradle.api.NamedDomainObjectContainer
@@ -61,7 +61,7 @@ class EasyLauncherPlugin implements Plugin<Project> {
             android.applicationVariants.all { ApplicationVariant variant ->
 
                 List<EasyLauncherConfig> configs = Lists.newArrayList()
-                ribbonVariants.each{
+                ribbonVariants.each {
                     if (variant.name == it.name) {
                         configs.add(it)
                     }

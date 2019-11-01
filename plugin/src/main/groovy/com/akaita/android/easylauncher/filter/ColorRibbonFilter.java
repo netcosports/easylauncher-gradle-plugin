@@ -21,7 +21,7 @@ public class ColorRibbonFilter implements EasyLauncherFilter {
     private final Gravity gravity;
     private final float textSizeRatio;
 
-    private String fontName = "DEFAULT";
+    private String fontName = "Roboto Light";
 
     private int fontStyle = Font.PLAIN;
 
@@ -86,22 +86,22 @@ public class ColorRibbonFilter implements EasyLauncherFilter {
 
         FontRenderContext frc = new FontRenderContext(g.getTransform(), true, true);
         // calculate the rectangle where the label is rendered
-        int maxLabelWidth = calculateMaxLabelWidth(imageHeight/2);
+        int maxLabelWidth = calculateMaxLabelWidth(imageHeight / 2);
         g.setFont(getFont(imageHeight, maxLabelWidth, frc));
 
         Rectangle2D textBounds = g.getFont().getStringBounds(label == null ? "" : label, frc);
         int textHeight = (int) textBounds.getHeight();
         int textPadding = textHeight / 10;
-        int labelHeight = textHeight + textPadding*2;
+        int labelHeight = textHeight + textPadding * 2;
 
         // update y gravity after calculating font size
         int y;
         switch (gravity) {
             case TOP:
-                y = largeRibbon ? imageHeight/4 : 0;
+                y = largeRibbon ? imageHeight / 4 : 0;
                 break;
             case BOTTOM:
-                y = imageHeight - labelHeight - (largeRibbon ? imageHeight/4 : 0);
+                y = imageHeight - labelHeight - (largeRibbon ? imageHeight / 4 : 0);
                 break;
             case TOPRIGHT:
             case TOPLEFT:

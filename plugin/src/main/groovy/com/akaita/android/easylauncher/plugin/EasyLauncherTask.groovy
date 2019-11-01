@@ -1,12 +1,14 @@
 package com.akaita.android.easylauncher.plugin
 
+import com.akaita.android.easylauncher.filter.EasyLauncherFilter
 import com.android.build.gradle.AppExtension
 import com.android.build.gradle.api.ApplicationVariant
 import com.android.builder.model.SourceProvider
-import com.akaita.android.easylauncher.filter.EasyLauncherFilter
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 
+import java.awt.*
+import java.util.List
 import java.util.function.Function
 import java.util.stream.Stream
 
@@ -27,6 +29,16 @@ class EasyLauncherTask extends DefaultTask {
 
     @TaskAction
     void run() {
+
+        try {
+            GraphicsEnvironment ge =
+                    GraphicsEnvironment.getLocalGraphicsEnvironment()
+            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, this.getClass().getResourceAsStream("/fonts/Roboto-Light.ttf")))
+        } catch (Exception e) {
+            //Handle exception
+            System.err.println("error font register " + e)
+        }
+
         if (filters.empty) {
             return
         }
@@ -44,7 +56,8 @@ class EasyLauncherTask extends DefaultTask {
                     @Override
                     Stream apply(SourceProvider sourceProvider) {
                         return sourceProvider.resDirectories.stream()
-                    }})
+                    }
+                })
                 .forEach { File resDir ->
                     if (resDir == outputDir) {
                         return
@@ -93,6 +106,11 @@ class EasyLauncherTask extends DefaultTask {
                     }
                 }
 
+        def fonts = ""
+        for (fontName in GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames()) {
+            fonts += "$fontName\n"
+        }
+        info("[$name] $fonts")
         info("task finished in ${System.currentTimeMillis() - t0}ms")
     }
 
