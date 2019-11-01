@@ -129,18 +129,19 @@ public class ColorRibbonFilter implements EasyLauncherFilter {
 
             FontMetrics fm = g.getFontMetrics();
 
+            int coord = y + fm.getAscent() + textPadding;
             if (gravity == Gravity.TOP || gravity == Gravity.BOTTOM) {
                 g.drawString(label,
                         (imageWidth / 2) - ((int) textBounds.getWidth() / 2),
-                        y + fm.getAscent());
+                        coord);
             } else if (gravity == Gravity.TOPRIGHT) {
                 g.drawString(label,
                         imageWidth - ((int) textBounds.getWidth() / 2),
-                        y + fm.getAscent());
+                        coord);
             } else {
                 g.drawString(label,
                         (int) -textBounds.getWidth() / 2,
-                        y + fm.getAscent());
+                        coord);
             }
 
         }
