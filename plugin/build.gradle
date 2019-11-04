@@ -35,7 +35,7 @@ publishing {
     publications {
         jar(MavenPublication) {
             groupId 'com.netcosports.gradle'
-            version = '0.0.3'
+            version = '1.0.0'
             artifactId 'easylauncher'
 
             // Tell maven to prepare the generated "*.jar" file for publishing

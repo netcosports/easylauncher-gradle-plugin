@@ -2,7 +2,6 @@ package com.akaita.android.easylauncher.filter;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.font.FontRenderContext;
@@ -69,7 +68,11 @@ public class ColorRibbonFilter implements EasyLauncherFilter {
         int imageHeight = image.getHeight();
 
         Graphics2D g = (Graphics2D) image.getGraphics();
-
+        FontRenderContext frc = new FontRenderContext(null, true, true);
+        // calculate the rectangle where the label is rendered
+        int maxLabelWidth = calculateMaxLabelWidth(imageHeight / 2);
+        g.setFont(getFont(imageHeight, maxLabelWidth, frc));
+        int ascent = g.getFontMetrics().getAscent();
         // transform
         switch (gravity) {
             case TOP:
@@ -84,14 +87,10 @@ public class ColorRibbonFilter implements EasyLauncherFilter {
                 break;
         }
 
-        FontRenderContext frc = new FontRenderContext(g.getTransform(), true, true);
-        // calculate the rectangle where the label is rendered
-        int maxLabelWidth = calculateMaxLabelWidth(imageHeight / 2);
-        g.setFont(getFont(imageHeight, maxLabelWidth, frc));
 
         Rectangle2D textBounds = g.getFont().getStringBounds(label == null ? "" : label, frc);
-        int textHeight = (int) textBounds.getHeight();
-        int textPadding = textHeight / 10;
+        int textHeight = (int) Math.round(textBounds.getHeight());
+        int textPadding = (int) Math.max(1.0, textHeight / 10);
         int labelHeight = textHeight + textPadding * 2;
 
         // update y gravity after calculating font size
@@ -127,9 +126,7 @@ public class ColorRibbonFilter implements EasyLauncherFilter {
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g.setColor(labelColor);
 
-            FontMetrics fm = g.getFontMetrics();
-
-            int coord = y + fm.getAscent() + textPadding;
+            int coord = y + ascent + textPadding;
             if (gravity == Gravity.TOP || gravity == Gravity.BOTTOM) {
                 g.drawString(label,
                         (imageWidth / 2) - ((int) textBounds.getWidth() / 2),
