@@ -21,7 +21,7 @@ buildscript {
             }
     }
     dependencies {
-        classpath 'com.netcosports.gradle:easylauncher:0.0.1'
+        classpath 'com.netcosports.gradle:easylauncher:1.0.0'
     }
 }
 ```
