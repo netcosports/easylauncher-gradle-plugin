@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-class EasyLauncherExtension {
+public class EasyLauncherExtension {
 
     public static String NAME = "easylauncher";
 
